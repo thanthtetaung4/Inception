@@ -1,0 +1,12 @@
+services:
+  nginx:
+    image: nginx
+    container_name: my_nginx
+    restart: always
+    volumes:
+      - /home/taung/my-website:/my-website:ro
+      - ./config/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/nginx/ssl/:/etc/nginx/ssl:ro  # Optional SSL
+    ports:
+      - "80:80"
+      - "8043:443"
