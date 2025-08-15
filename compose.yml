@@ -1,14 +1,63 @@
+# Testing with db conn
+
+version: "3.9"
+
 services:
+  db:
+    build:
+      context: .
+      dockerfile: requirements/db/Dockerfile
+    container_name: wp_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - wp_data:/var/lib/mysql
+    networks:
+      - my-custom-network
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: requirements/wp/Dockerfile
+    container_name: my_wordpress
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - wordpress_files:/var/www/html
+    networks:
+      - my-custom-network
+
   nginx:
-    image: nginx
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
     container_name: my_nginx
     restart: always
     volumes:
-      - /home/taung/my-website:/my-website:ro
-      - ./config/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      - /etc/nginx/ssl/:/etc/nginx/ssl:ro
-    extra_hosts:
-      - "taung.42.fr:172.17.0.1"
+      - ./requirements/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ~/ssl/:/etc/nginx/ssl:ro
+      - wordpress_files:/var/www/html:ro
     ports:
       - "80:80"
       - "443:443"
+    extra_hosts:
+      - "taung.42.fr:172.17.0.1"
+    init: true
+    depends_on:
+      - wordpress
+    networks:
+      - my-custom-network
+
+volumes:
+  wordpress_files:
+    driver: local
+  wp_data:
+    driver: local
+
+networks:
+  my-custom-network:
+    driver: bridge

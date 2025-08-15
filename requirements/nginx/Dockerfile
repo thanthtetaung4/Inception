@@ -6,6 +6,6 @@ RUN apk add --no-cache nginx
 
 RUN ls /usr/share/nginx/ && ls /etc/nginx/
 
-EXPOSE 7000
+EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
