@@ -20,10 +20,20 @@ RUN chown -R www-data:www-data /var/www/html && \
 # Ensure PHP-FPM uses TCP instead of socket
 RUN sed -i 's|^listen = .*|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf
 
-RUN php --version
+# RUN php --version
+
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
 
 RUN ln -s /usr/sbin/php-fpm8.2 /usr/local/bin/php-fpm
 
 EXPOSE 9000
 
 CMD ["php-fpm", "-F"]
+
+# COPY tools/wp-config.sh /usr/local/bin/wp-config.sh
+# RUN chmod +x /usr/local/bin/wp-config.sh
+
+# CMD ["/usr/local/bin/wp-config.sh"]

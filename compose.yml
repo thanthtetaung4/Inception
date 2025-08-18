@@ -1,25 +1,21 @@
-# Testing with db conn
-
-version: "3.9"
-
 services:
   db:
     build:
-      context: .
-      dockerfile: requirements/db/Dockerfile
+      context: requirements/db
+      dockerfile: Dockerfile
     container_name: wp_db
     restart: always
     env_file:
       - .env
     volumes:
-      - wp_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     networks:
       - my-custom-network
 
   wordpress:
     build:
-      context: .
-      dockerfile: requirements/wp/Dockerfile
+      context: requirements/wp
+      dockerfile: Dockerfile
     container_name: my_wordpress
     restart: always
     env_file:
@@ -27,22 +23,21 @@ services:
     depends_on:
       - db
     volumes:
-      - wordpress_files:/var/www/html
+      - wp_data:/var/www/html
     networks:
       - my-custom-network
 
   nginx:
     build:
-      context: .
-      dockerfile: requirements/nginx/Dockerfile
+      context: requirements/nginx
+      dockerfile: Dockerfile
     container_name: my_nginx
     restart: always
     volumes:
       - ./requirements/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - ~/ssl/:/etc/nginx/ssl:ro
-      - wordpress_files:/var/www/html:ro
+      - wp_data:/var/www/html:ro
     ports:
-      - "80:80"
       - "443:443"
     extra_hosts:
       - "taung.42.fr:172.17.0.1"
@@ -52,12 +47,18 @@ services:
     networks:
       - my-custom-network
 
-volumes:
-  wordpress_files:
-    driver: local
-  wp_data:
-    driver: local
-
 networks:
   my-custom-network:
     driver: bridge
+
+volumes:
+  db_data:
+   driver_opts:
+      type: 'none'
+      o: bind
+      device: /home/thant-htet-aung/taung/data/db_data
+  wp_data:
+   driver_opts:
+      type: 'none'
+      o: bind
+      device: /home/thant-htet-aung/taung/data/wp_data
