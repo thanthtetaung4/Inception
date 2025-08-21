@@ -31,9 +31,8 @@ RUN ln -s /usr/sbin/php-fpm8.2 /usr/local/bin/php-fpm
 
 EXPOSE 9000
 
-# CMD ["php-fpm", "-F"]
-
 COPY tools/wp-config.sh /usr/local/bin/wp-config.sh
+
 RUN chmod +x /usr/local/bin/wp-config.sh
 
 CMD ["/usr/local/bin/wp-config.sh"]

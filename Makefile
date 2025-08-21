@@ -47,7 +47,5 @@ help:
 	@echo "  make fclean   - Stop containers, remove volumes and images"
 	@echo "  make rebuild  - Clean, build, and start containers"
 	@echo "  make re       - Force rebuild everything from scratch"
-	@echo "  make ps       - List running containers"
-	@echo "  make logs     - Follow logs of all containers"
 
 .PHONY: all build up down clean fclean rebuild re help

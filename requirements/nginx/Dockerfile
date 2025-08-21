@@ -1,11 +1,9 @@
 FROM alpine:3.14
 
-RUN echo "hello from apline nginx image"
-
 RUN apk add --no-cache nginx
 
-RUN ls /usr/share/nginx/ && ls /etc/nginx/
+COPY nginx-conf/default.conf /etc/nginx/http.d/default.conf
 
-EXPOSE 80 443
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
