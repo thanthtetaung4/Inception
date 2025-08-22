@@ -30,6 +30,7 @@ clean:
 fclean:
 	@echo "${GREEN}Stopping containers, removing volumes and images...${NC}"
 	docker compose down -v --rmi all --remove-orphans
+	sudo rm -rf /home/taung/data/db_data/* /home/taung/data/wp_data/*
 
 # Rebuild and start fresh
 rebuild: clean build up
