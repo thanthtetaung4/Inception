@@ -67,6 +67,21 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
         echo "ERROR: WordPress installation failed"
         exit 1
     fi
+
+    echo "Creating normal user..."
+    echo "user name: $WORDPRESS_USER \n, pwd: $(cat $WP_USER_PASS)"
+    wp user create \
+        "$WORDPRESS_USER" "user@${DOMAIN_NAME}" \
+        --user_pass="$(cat $WP_USER_PASS)" \
+        --allow-root
+
+    if [ $? -eq 0 ]; then
+        echo "Normal user created successfully"
+    else
+        echo "ERROR: Normal user creataion failed"
+        exit 1
+    fi
+
 else
     echo "WordPress is already installed"
 fi

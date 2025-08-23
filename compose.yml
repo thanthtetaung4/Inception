@@ -28,6 +28,10 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      WP_USER_PASS: /run/secrets/wp_user_pass
+    secrets:
+      - wp_user_pass
     expose:
       - 9000
     depends_on:
@@ -80,3 +84,7 @@ volumes:
       type: 'none'
       o: bind
       device: /home/taung/data/wp_data
+
+secrets:
+  wp_user_pass:
+    file: ./secrets/wp_user_pwd.txt
