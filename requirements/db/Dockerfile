@@ -37,10 +37,6 @@ RUN mkdir -p /var/lib/mysql /run/mysqld && \
 # Initialize the database system
 RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-# Copy initialization script
-COPY tools/init-db.sh /usr/local/bin/init-db.sh
-RUN chmod +x /usr/local/bin/init-db.sh
-
 # Copy entrypoint script
 COPY tools/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
@@ -53,4 +49,3 @@ EXPOSE 3306
 
 # Use custom entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["mysqld", "--user=mysql", "--console"]

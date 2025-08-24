@@ -7,18 +7,16 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      DB_ROOT_PASSWORD: /run/secrets/db_root_pwd
     volumes:
       - db_data:/var/lib/mysql
+    secrets:
+      - db_root_pwd
     expose:
       - 3306
     networks:
       - inception
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${DB_ROOT_PASSWORD}"]
-      timeout: 10s
-      retries: 5
-      interval: 10s
-      start_period: 30s
 
   wordpress:
     build:
@@ -35,8 +33,7 @@ services:
     expose:
       - 9000
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     volumes:
       - wp_data:/var/www/html
     networks:
@@ -88,3 +85,5 @@ volumes:
 secrets:
   wp_user_pass:
     file: ./secrets/wp_user_pwd.txt
+  db_root_pwd:
+    file: ./secrets/db_root_pwd.txt
