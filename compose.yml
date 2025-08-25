@@ -1,7 +1,7 @@
 services:
   db:
     build:
-      context: requirements/db
+      context: requirements/mariadb
       dockerfile: Dockerfile
     container_name: mariadb
     restart: always
@@ -22,7 +22,7 @@ services:
 
   wordpress:
     build:
-      context: requirements/wp
+      context: requirements/wordpress
       dockerfile: Dockerfile
     container_name: wordpress
     restart: always
