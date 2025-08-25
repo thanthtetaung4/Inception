@@ -3,16 +3,18 @@ services:
     build:
       context: requirements/db
       dockerfile: Dockerfile
-    container_name: wp_db
+    container_name: mariadb
     restart: always
     env_file:
       - .env
     environment:
       DB_ROOT_PASSWORD: /run/secrets/db_root_pwd
+      WORDPRESS_DB_PASSWORD: /run/secrets/wp_db_pwd
     volumes:
       - db_data:/var/lib/mysql
     secrets:
       - db_root_pwd
+      - wp_db_pwd
     expose:
       - 3306
     networks:
@@ -28,8 +30,12 @@ services:
       - .env
     environment:
       WP_USER_PASS: /run/secrets/wp_user_pass
+      WORDPRESS_DB_PASSWORD: /run/secrets/wp_db_pwd
+      WP_ADMIN_PWD: /run/secrets/wp_root_pwd
     secrets:
       - wp_user_pass
+      - wp_db_pwd
+      - wp_root_pwd
     expose:
       - 9000
     depends_on:
@@ -87,3 +93,7 @@ secrets:
     file: ./secrets/wp_user_pwd.txt
   db_root_pwd:
     file: ./secrets/db_root_pwd.txt
+  wp_db_pwd:
+    file: ./secrets/wp_db_pwd.txt
+  wp_root_pwd:
+    file: ./secrets/wp_root_pwd.txt

@@ -2,11 +2,10 @@
 set -e
 
 # Environment variables
-# DB_ROOT_PASSWORD=
 export DB_ROOT_PASSWORD=$(cat $DB_ROOT_PASSWORD)
+export WORDPRESS_DB_PASSWORD=$(cat $WORDPRESS_DB_PASSWORD)
 DB_NAME=${DB_NAME:-wordpress}
 
-echo "db root pww is: $DB_ROOT_PASSWORD"
 
 # Initialize database if empty
 if [ ! -d "/var/lib/mysql/mysql" ]; then
@@ -27,14 +26,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     done
 
     echo "Creating database and user..."
-#     mysql -u root <<-EOSQL
-#         ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
-#         CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-#         CREATE USER IF NOT EXISTS '${WORDPRESS_DB_USER}'@'%' IDENTIFIED BY '${WORDPRESS_DB_PASSWORD}';
-#         GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${WORDPRESS_DB_USER}'@'%';
-#         FLUSH PRIVILEGES;
-# EOSQL
-
+    # apply new policies and create db
     if ! mysql -u root <<-EOSQL
         ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
         CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

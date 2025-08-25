@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+export WORDPRESS_DB_PASSWORD=$(cat $WORDPRESS_DB_PASSWORD)
+export WP_ADMIN_PWD=$(cat $WP_ADMIN_PWD)
+
+echo "WP_ROOT_PWD ${WP_ADMIN_PWD}"
 echo "Starting WordPress initialization..."
 
 # Wait for DB to be ready with more robust checking
@@ -53,11 +57,11 @@ echo "Checking if WordPress is installed..."
 if ! wp core is-installed --allow-root 2>/dev/null; then
     echo "Installing WordPress..."
     wp core install \
-        --url="https://taung.42.fr" \
-        --title="My WordPress Site" \
-        --admin_user="admin" \
-        --admin_password="adminpass" \
-        --admin_email="admin@gmail.com" \
+        --url="https://${DOMAIN_NAME}" \
+        --title="${WP_SITE_NAME}" \
+        --admin_user="${WP_ADMIN}" \
+        --admin_password="${WP_ADMIN_PWD}" \
+        --admin_email="admin@${DOMAIN_NAME}" \
         --skip-email \
         --allow-root
 
